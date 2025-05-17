@@ -91,3 +91,63 @@ if st.button("Gerar Laudo"):
     st.write(f"**Fração de Ejeção (Teichholz)**: {fe} %")
 
     st.success("Cálculos realizados com sucesso! Geração de laudo em breve.")
+from docx import Document
+from docx.shared import Pt
+
+# Geração do texto do laudo com base nos dados
+if st.session_state.logged_in and 'bsa' in locals():
+    st.subheader("Texto do Laudo")
+
+    laudo_texto = f"""
+Laudo Ecocardiograma
+
+Ventrículo esquerdo: cavidade com dimensões normais, paredes com espessura normal, ausência de alteração da contratilidade segmentar, função sistólica e diastólica normal.
+
+Átrio esquerdo: dimensões normais, volume indexado normal.
+
+Ventrículo direito e átrio direito: cavidades com dimensões normais, função sistólica normal.
+
+Valva aórtica: folhetos com espessura e mobilidade normais, abertura valvar preservada, ausência de refluxo aórtico.
+
+Valva mitral: folhetos com espessura e mobilidade normais, abertura valvar preservada, refluxo fisiológico.
+
+Valva tricúspide: folhetos com espessura e mobilidade normais, refluxo mínimo, fisiológico.
+
+Valva pulmonar: folhetos com espessura e mobilidade normais, refluxo mínimo, fisiológico.
+
+Pericárdio: ausência de derrame pericárdico.
+
+Conclusão: Ecocardiograma transtorácico normal.
+"""
+
+    st.text_area("Texto do Laudo", laudo_texto, height=400)
+
+    # Criação de arquivo DOCX
+    document = Document()
+    style = document.styles['Normal']
+    font = style.font
+    font.name = 'Calibri'
+    font.size = Pt(12)
+
+    document.add_heading('Laudo Ecocardiograma', level=1)
+    document.add_paragraph(f"Paciente: {nome}")
+    document.add_paragraph(f"Peso: {peso} kg")
+    document.add_paragraph(f"Altura: {altura} cm")
+    document.add_paragraph(f"Gênero: {genero}")
+    document.add_paragraph(f"Área de Superfície Corporal (ASC): {bsa:.2f} m²")
+    document.add_paragraph("")
+
+    for linha in laudo_texto.strip().split('\n\n'):
+        document.add_paragraph(linha.strip())
+
+    # Salvar o arquivo temporariamente
+    docx_path = "/tmp/laudo_ecocardiograma.docx"
+    document.save(docx_path)
+
+    with open(docx_path, "rb") as file:
+        st.download_button(
+            label="📄 Baixar Laudo em DOCX",
+            data=file,
+            file_name="laudo_ecocardiograma.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
