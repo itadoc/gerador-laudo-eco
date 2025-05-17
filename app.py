@@ -28,9 +28,15 @@ def calcular_vaei(volume_ae, asc):
     return round(volume_ae / asc, 1) if asc > 0 else 0.0
 
 def calcular_fe_teichholz(ddve_mm, dsve_mm):
-    if ddve_mm == 0:
+    # Correção com fórmula completa de Teichholz (volumes)
+    ddve = ddve_mm / 10
+    dsve = dsve_mm / 10
+    if ddve == 0 or dsve == 0:
         return 0.0
-    return round(((ddve_mm**3 - dsve_mm**3) / ddve_mm**3) * 100, 1)
+    edv = (7.0 / (2.4 + ddve)) * ddve**3
+    esv = (7.0 / (2.4 + dsve)) * dsve**3
+    fe = ((edv - esv) / edv) * 100
+    return round(fe, 2)
 
 # ----- App Streamlit -----
 
@@ -85,4 +91,3 @@ if st.button("Gerar Laudo"):
     st.write(f"**Fração de Ejeção (Teichholz)**: {fe} %")
 
     st.success("Cálculos realizados com sucesso! Geração de laudo em breve.")
-
