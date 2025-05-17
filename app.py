@@ -8,7 +8,7 @@ USERS = {
 
 # Função para calcular a Área de Superfície Corporal (Dubois)
 def calcular_asc(peso, altura_cm):
-    altura_m = altura_cm * 100  # converte cm para metros
+    altura_m = altura_cm / 100  # converte cm para metros
     asc = 0.007184 * (altura_m ** 0.725) * (peso ** 0.425)
     return asc
 
@@ -36,7 +36,7 @@ def formulario():
         st.subheader("Informações do Paciente")
         nome = st.text_input("Nome do paciente")
         peso = st.number_input("Peso (kg)", min_value=0.0, format="%.2f")
-        altura = st.number_input("Altura (cm)", min_value=0.0, format="%.2f")
+        altura = st.number_input("Altura (m)", min_value=0.0, format="%.2f")
         genero = st.selectbox("Gênero", ["Masculino", "Feminino"])
 
         st.subheader("Medidas (em milímetros)")
