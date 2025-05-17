@@ -8,7 +8,7 @@ USERS = {
 
 # Função para calcular a Área de Superfície Corporal (Dubois)
 def calcular_asc(peso, altura_cm):
-    altura_m = altura_cm / 10000  # converte cm para metros
+    altura_m = altura_cm * 100  # converte cm para metros
     asc = 0.007184 * (altura_m ** 0.725) * (peso ** 0.425)
     return asc
 
