@@ -1,13 +1,14 @@
 import streamlit as st
 
-# Usuários e senhas simples (em produção, use hash e banco de dados)
+# Usuários e senhas simples
 USERS = {
     "medico1": "senha123",
     "ecocardio": "eco2025"
 }
 
 # Função para calcular a Área de Superfície Corporal (Dubois)
-def calcular_asc(peso, altura_m):
+def calcular_asc(peso, altura_cm):
+    altura_m = altura_cm / 100  # converte cm para metros
     asc = 0.007184 * (altura_m ** 0.725) * (peso ** 0.425)
     return asc
 
@@ -35,7 +36,7 @@ def formulario():
         st.subheader("Informações do Paciente")
         nome = st.text_input("Nome do paciente")
         peso = st.number_input("Peso (kg)", min_value=0.0, format="%.2f")
-        altura = st.number_input("Altura (m) — ex: 1.70 para 1,70 m", min_value=0.0, format="%.2f")
+        altura = st.number_input("Altura (cm)", min_value=0.0, format="%.2f")
         genero = st.selectbox("Gênero", ["Masculino", "Feminino"])
 
         st.subheader("Medidas (em milímetros)")
@@ -50,9 +51,6 @@ def formulario():
         enviado = st.form_submit_button("Calcular")
 
     if enviado:
-        st.write(f"Peso: {peso} kg")
-        st.write(f"Altura: {altura} m")
-
         asc = calcular_asc(peso, altura)
         st.success(f"Área de Superfície Corporal (ASC): {asc:.2f} m²")
 
