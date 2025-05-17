@@ -36,7 +36,7 @@ def formulario():
         st.subheader("Informações do Paciente")
         nome = st.text_input("Nome do paciente")
         peso = st.number_input("Peso (kg)", min_value=0.0, format="%.2f")
-        altura = st.number_input("Altura (cm)", min_value=0.0, format="%.2f")
+        altura = st.number_input("Altura (m)", min_value=0.0, format="%.2f")
         genero = st.selectbox("Gênero", ["Masculino", "Feminino"])
 
         st.subheader("Medidas (em milímetros)")
