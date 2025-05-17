@@ -12,6 +12,21 @@ def calcular_asc(peso, altura_cm):
     asc = 0.007184 * (altura_m ** 0.725) * (peso ** 0.425)
     return asc
 
+# Cálculos cardíacos
+def calcular_parametros(septo, parede, ddve, dsve, vol_atrio, asc):
+    # Massa do VE (g)
+    massa_ve = 0.8 * (1.04 * ((ddve + septo + parede) ** 3 - ddve ** 3)) + 0.6
+    # IMVE (g/m²)
+    imve = massa_ve / asc if asc > 0 else 0
+    # ERP
+    erp = (2 * parede) / ddve if ddve > 0 else 0
+    # VAEi (mL/m²)
+    vaei = vol_atrio / asc if asc > 0 else 0
+    # FE Teichholz
+    fe = ((ddve ** 3 - dsve ** 3) / ddve ** 3) * 100 if ddve > 0 else 0
+
+    return massa_ve, imve, erp, vaei, fe
+
 # Autenticação simples
 def autenticar(usuario, senha):
     return USERS.get(usuario) == senha
@@ -52,9 +67,22 @@ def formulario():
 
     if enviado:
         asc = calcular_asc(peso, altura)
+
         st.success(f"Área de Superfície Corporal (ASC): {asc:.2f} m²")
 
-        st.info("Cálculos adicionais serão implementados na próxima etapa.")
+        # Cálculos cardíacos
+        massa_ve, imve, erp, vaei, fe = calcular_parametros(
+            septo, parede_post, diam_diast, diam_sist, vol_atrio_esq, asc
+        )
+
+        st.subheader("Cálculos Cardíacos")
+        st.write(f"Massa do VE: **{massa_ve:.2f} g**")
+        st.write(f"Índice de Massa do VE (IMVE): **{imve:.2f} g/m²**")
+        st.write(f"Espessura Relativa da Parede (ERP): **{erp:.2f}**")
+        st.write(f"Volume do Átrio Esquerdo indexado (VAEi): **{vaei:.2f} mL/m²**")
+        st.write(f"Fração de Ejeção (Teichholz): **{fe:.1f}%**")
+
+        st.info("Descrição técnica e conclusão serão implementadas na próxima etapa.")
         st.write("---")
         st.write("👨‍⚕️ Desenvolvido para uso médico por ecocardiografistas.")
 
